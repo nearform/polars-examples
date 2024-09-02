@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "example-polars"
+version = "0.1.0"
+description = ""
+authors = ["Denis Germano <denis.germano@nearform.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+polars = "^1.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
