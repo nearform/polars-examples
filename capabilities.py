@@ -1,5 +1,6 @@
 import polars as pl
 
+# 0. Loading the data
 df = pl.read_ndjson("gharchive_data_sample.json")
 
 # 1. Filtering
@@ -57,14 +58,13 @@ users_data = [
 ]
 users_df = pl.DataFrame(users_data)
 
-# 7. Join date_df with users_df on 'user_login' and 'login'
 joined_df = date_df.join(users_df, left_on="user_login", right_on="login", how="inner")
 
-# 8. Calculate monthly pull request counts
+# 7. Calculate monthly pull request counts
 monthly_counts = date_df.group_by(["year", "month"]).agg(
     [pl.count().alias("monthly_count")]
 )
-# 9. Calculate moving average (3-month window)
+# 8. Calculate moving average (3-month window)
 monthly_counts = monthly_counts.with_columns(
     [
         pl.col("monthly_count")
@@ -73,7 +73,7 @@ monthly_counts = monthly_counts.with_columns(
     ]
 )
 
-# 10. Rank pull requests within each year
+# 9. Rank pull requests within each year
 ranked_df = date_df.with_columns(
     [pl.col("created_at_dt").sort().cum_count().over("year").alias("rank_within_year")]
 )
