@@ -1,10 +1,12 @@
 import polars as pl
 
 # 0. Loading the data
-df = pl.read_ndjson("gharchive_data_sample.json")
+df = pl.read_ndjson("raw_input/*.json")
+repo = "nodejs/node"
 
 # 1. Filtering
-filtered_df = df.filter(pl.col("type") == "PullRequestEvent")
+filtered_df = df.filter(pl.col("repo").struct.field("name") == repo)
+# filtered_df = filtered_df_node.filter(pl.col("type") == "PullRequestEvent")
 
 # 2. Accessing nested fields and renaming columns
 nested_df = filtered_df.with_columns(
