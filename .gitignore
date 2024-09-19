@@ -316,3 +316,6 @@ pyrightconfig.json
 input
 raw_input
 compressed_raw_input
+clean_input
+coerce_input
+node_input

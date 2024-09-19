@@ -1,13 +1,38 @@
 import polars as pl
+import glob
+import json
+pl.Config.set_tbl_rows(None)
 
 # 0. Loading the data
-df = pl.read_ndjson("raw_input/*.json")
-repo = "nodejs/node"
+schema = {
+    "id": pl.String,
+    "type": pl.String,
+    "actor": pl.Object,
+    "repo": pl.Object,
+    "payload": pl.Object,
+    "public": pl.Boolean,
+    "created_at": pl.String,
+    "org": pl.Null,
+}
+
+# df = pl.read_ndjson("coerce_input/sample.json", ignore_errors=True)
+df = pl.read_ndjson(
+    "node_input/2024-01-01-*.json",
+    # ignore_errors=True,
+    batch_size=1024,
+    infer_schema_length=None,
+)
+# df = pl.read_ndjson("coerce_input/2024-01-01-12.json", schema=schema)
+# repo = "nodejs/node"
 
 # 1. Filtering
-filtered_df = df.filter(pl.col("repo").struct.field("name") == repo)
-# filtered_df = filtered_df_node.filter(pl.col("type") == "PullRequestEvent")
-
+# filtered_df_node = df.filter(pl.col("repo").struct.field("name") == repo)
+filtered_df = df.filter(pl.col("type") == "PullRequestEvent")
+# print(filtered_df)
+print(df.schema)
+print("AAAAAAAA")
+aaa = filtered_df.select([pl.col("payload").alias("payload")])
+print(aaa.to_series().to_list())
 # 2. Accessing nested fields and renaming columns
 nested_df = filtered_df.with_columns(
     [
@@ -26,6 +51,7 @@ nested_df = filtered_df.with_columns(
         .alias("user_login"),
     ]
 )
+print(nested_df)
 
 # 3. Converting string to datetime and extracting parts of the date
 date_df = nested_df.with_columns(
@@ -104,3 +130,5 @@ print(monthly_counts)
 
 print("\nRanked Pull Requests within Each Year:")
 print(ranked_df)
+
+print("Done!!!")

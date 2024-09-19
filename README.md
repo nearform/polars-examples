@@ -9,11 +9,9 @@
 ### Usage
 
 ```shell
-poetry shell
+poetry install
 
-python open_prs_last_month.py
-python open_prs_by_year_month.py
-python capabilities.py
+sh process_gharchive
 ```
 
 ## nodejs-polars
