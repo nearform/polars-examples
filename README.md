@@ -11,7 +11,7 @@
 ```shell
 poetry install
 
-sh process_gharchive
+sh process_gharchive.sh
 ```
 
 ## nodejs-polars
