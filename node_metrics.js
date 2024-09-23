@@ -1,9 +1,11 @@
 const pl = require('nodejs-polars');
 const fs = require('fs');
-const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+//const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+const { Chart, registerables } = require('chart.js');
+const { createCanvas } = require('canvas');
 
 // Load the JSON file
-const rawData = fs.readFileSync('node_input/2024-01-01-13.json');
+const rawData = fs.readFileSync('node_input/2024-01-01-12.json');
 const events = JSON.parse(rawData);
 
 // Convert JSON into a Polars DataFrame
@@ -29,15 +31,25 @@ const openIssuesOverTime = issueDf.filter(pl.col('issue.state').eq('open'))
 
 // DISPLAY //
 
-// Create a ChartJSNodeCanvas instance for rendering charts
-const width = 800; 
-const height = 600;
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
+Chart.register(...registerables); // Register Chart.js components
 
-// Most Active Contributors Bar Chart
+// Helper function to create and save a chart as an image
+async function createChart(config, outputPath) {
+  const width = 800;
+  const height = 600;
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
+
+  new Chart(ctx, config);
+
+  const buffer = canvas.toBuffer('image/png');
+  fs.writeFileSync(outputPath, buffer);
+}
+
+// Example: Most Active Contributors Bar Chart
 async function createActiveContributorsChart() {
-  const labels = activeContributors.getColumn('actor.login').toArray();
-  const data = activeContributors.getColumn('count').toArray();
+  const labels = ['contributor1', 'contributor2', 'contributor3']; // Replace with actual data
+  const data = [10, 15, 5]; // Replace with actual data
 
   const configuration = {
     type: 'bar',
@@ -58,55 +70,8 @@ async function createActiveContributorsChart() {
     }
   };
 
-  const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-  fs.writeFileSync('active_contributors.png', image);
+  await createChart(configuration, 'active_contributors.png');
 }
 
-// Rolling Mean of Pull Requests Over Time Line Chart
-async function createRollingMeanPRChart() {
-  const labels = rollingMeanPRs.getColumn('created_at').toArray();
-  const data = rollingMeanPRs.getColumn('rolling_mean_prs').toArray();
-
-  const configuration = {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Rolling Mean of PRs',
-        data: data,
-        borderColor: 'rgba(54, 162, 235, 1)',
-        tension: 0.1
-      }]
-    }
-  };
-
-  const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-  fs.writeFileSync('rolling_mean_prs.png', image);
-}
-
-// Number of Open Issues Over Time Line Chart
-async function createOpenIssuesChart() {
-  const labels = openIssuesOverTime.getColumn('created_at').toArray();
-  const data = openIssuesOverTime.getColumn('count').toArray();
-
-  const configuration = {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Open Issues',
-        data: data,
-        borderColor: 'rgba(255, 99, 132, 1)',
-        tension: 0.1
-      }]
-    }
-  };
-
-  const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-  fs.writeFileSync('open_issues.png', image);
-}
-
-// Generate Charts
+// Generate the chart
 createActiveContributorsChart();
-createRollingMeanPRChart();
-createOpenIssuesChart();
