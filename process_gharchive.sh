@@ -10,7 +10,7 @@ mkdir -p node_input
 
 year=2024                   # Set the year
 for month in {1..1}; do     # Set the month range
-  for day in {1..1}; do     # Set the day range
+  for day in {1..10}; do    # Set the day range
     for hour in {0..23}; do # Set the hour range
 
       # Format the month, day, and hour to ensure two digits
@@ -33,9 +33,9 @@ for month in {1..1}; do     # Set the month range
 
     done
 
-    poetry run python clean_raw_input.py
-    poetry run python node_clean_input.py
   done
 done
 
-poetry run python process_gharchive.py
+poetry run python clean_raw_input.py
+poetry run python node_clean_input.py
+# poetry run python process_gharchive.py

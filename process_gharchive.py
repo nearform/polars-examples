@@ -116,7 +116,7 @@ schema = Schema(
 )
 
 df = pl.read_ndjson(
-    "node_input/*.json",
+    "node_input/node.json",
     schema=schema,
 )
 

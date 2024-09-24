@@ -1,6 +1,6 @@
 import glob
 import json
-
+from datetime import datetime
 import polars as pl
 from polars.datatypes import (
     Array,
@@ -35,7 +35,6 @@ from polars.datatypes import (
 )
 from polars.schema import Schema
 
-pl.Config.set_tbl_rows(None)
 
 # 0. Loading the data
 schema = Schema(
@@ -117,31 +116,77 @@ schema = Schema(
 )
 
 
-def filter_node(input_folder, stream=False):
+def filter_node(input_folder, scan=False, streaming=False):
+    start = datetime.now()
+    inital = start
     with open("node_input/node.json", "w") as outfile:
-        if stream:
+        last = datetime.now()
+        print(f"{last-start} - Opened output file")
+        start = last
+
+        if scan:
             df = pl.scan_ndjson(
                 f"{input_folder}/*.json",
                 schema=schema,
             )
+            last = datetime.now()
+            print(f"{last-start} - Scan Completed")
+            start = last
+
             filtered_df_node = df.filter(
                 pl.col("repo").struct.field("name") == "nodejs/node"
             )
-            filtered_df_node.collect(streaming=True).write_ndjson()
-            outfile.write(filtered_df_node.collect(streaming=True).write_ndjson())
+            last = datetime.now()
+            print(f"{last-start} - Filter Lazy Completed")
+            start = last
+
+            data_collected = filtered_df_node.collect(streaming=streaming)
+            last = datetime.now()
+            print(f"{last-start} - Collect streaming={streaming} Completed")
+            start = last
+
+            data = data_collected.write_ndjson()
+            last = datetime.now()
+            print(f"{last-start} - write_ndjson Completed")
+            start = last
+
+            outfile.write(data)
+            last = datetime.now()
+            print(f"{last-start} - Write Completed")
+            start = last
 
         else:
             df = pl.read_ndjson(
                 f"{input_folder}/*.json",
                 schema=schema,
             )
+            last = datetime.now()
+            print(f"{last-start} - Read Completed")
+            start = last
+
             filtered_df_node = df.filter(
                 pl.col("repo").struct.field("name") == "nodejs/node"
             )
-            outfile.write(filtered_df_node.write_ndjson())
+            last = datetime.now()
+            print(f"{last-start} - Filter Completed")
+            start = last
+
+            data = filtered_df_node.write_ndjson()
+            last = datetime.now()
+            print(f"{last-start} - write_ndjson Completed")
+            start = last
+
+            outfile.write(data)
+            last = datetime.now()
+            print(f"{last-start} - Write Completed")
+            start = last
+
+    print(f"{last-inital} - Total time\n\n")
 
 
 if __name__ == "__main__":
-    print(f"processing clean_input folder")
-    filter_node("clean_input")
+    print(f"processing clean_input folder\n\n")
+    filter_node("clean_input", scan=False)
+    filter_node("clean_input", scan=True, streaming=False)
+    filter_node("clean_input", scan=True, streaming=True)
     print("Done!!!")
