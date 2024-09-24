@@ -35,6 +35,7 @@ from polars.datatypes import (
 )
 from polars.schema import Schema
 
+pl.Config.set_tbl_rows(None)
 
 # 0. Loading the data
 schema = Schema(
@@ -115,9 +116,32 @@ schema = Schema(
     ]
 )
 
-df = pl.read_ndjson(
-    "node_input/*.json",
-    schema=schema,
-)
 
-print("Done!!!")
+def filter_node(input_folder, stream=False):
+    with open("node_input/node.json", "w") as outfile:
+        if stream:
+            df = pl.scan_ndjson(
+                f"{input_folder}/*.json",
+                schema=schema,
+            )
+            filtered_df_node = df.filter(
+                pl.col("repo").struct.field("name") == "nodejs/node"
+            )
+            filtered_df_node.collect(streaming=True).write_ndjson()
+            outfile.write(filtered_df_node.collect(streaming=True).write_ndjson())
+
+        else:
+            df = pl.read_ndjson(
+                f"{input_folder}/*.json",
+                schema=schema,
+            )
+            filtered_df_node = df.filter(
+                pl.col("repo").struct.field("name") == "nodejs/node"
+            )
+            outfile.write(filtered_df_node.write_ndjson())
+
+
+if __name__ == "__main__":
+    print(f"processing clean_input folder")
+    filter_node("clean_input")
+    print("Done!!!")
