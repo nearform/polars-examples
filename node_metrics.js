@@ -4,7 +4,7 @@ import { Chart, registerables } from 'chart.js';
 import { createCanvas } from 'canvas';
 import open, {openApp, apps} from 'open';
 
-const df = pl.readJSON('node_input/2024-01-01-12.copy.json', {format: "lines"});
+const df = pl.readJSON('node.json', {format: "lines"});
 
 // Compute metrics
 
@@ -28,11 +28,8 @@ console.log(rollingMeanPRs);
 
 // 3. Number of open issues over time (assuming 'issue' and 'state' fields exist)
 var issueDf = df.rename({"id": "_id", "created_at": "_created_at"}).filter(pl.col('type').eq(pl.lit('IssuesEvent')));
-//console.log(issueDf);
 issueDf = issueDf.unnest('payload').rename({"number": "_number"});
-//console.log(issueDf);
 issueDf = issueDf.unnest('issue');
-//console.log(issueDf);
 console.log("open Issues Over Time");
 const openIssuesOverTime = issueDf.filter(pl.col('state').eq(pl.lit('open')))
   .groupBy('created_at').count();
