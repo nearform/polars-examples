@@ -4,6 +4,17 @@ import { Chart, registerables } from 'chart.js';
 import { createCanvas } from 'canvas';
 import open from 'open';
 
+// Prepare file -- prepend artifical line for schema inferring
+const data = fs.readFileSync('node.json')
+const fd = fs.openSync('node.json', 'w+')
+const insert = Buffer.from('{"id":"1234","type":"ArtificialEvent","actor":{"id":123412341234,"login":"dummy","display_login":"nodejs-github-bot","gravatar_id":"","url":"some_url","avatar_url":"some_url"},"repo":{"id":1234,"name":"nodejs/node","url":"some_url"},"payload":{"repository_id":1234,"push_id":1234,"size":123,"distinct_size":123,"ref":"string","head":"string","before":"str","commits":[{"sha":"string","author":{"email":"email","name":"string"},"message":"string","distinct":true,"url":"some_url"}],"action":"opened","number":46037,"pull_request":{"state":"open","user":{"login":"bot","id":1234,"node_id":"ABCD","avatar_url":"some_url","gravatar_id":"","url":"some_url","html_url":"some_url","followers_url":"some_url","following_url":"some_url","gists_url":"some_url","starred_url":"some_url","subscriptions_url":"some_url","organizations_url":"some_url","repos_url":"some_url","events_url":"some_url","received_events_url":"some_url","type":"User","site_admin":false},"merged":false}},"public":null,"created_at":"2023-01-01T00:26:59Z"}\n');
+fs.writeSync(fd, insert, 0, insert.length, 0)
+fs.writeSync(fd, data, 0, data.length, insert.length)
+fs.close(fd, (err) => {
+  if (err) throw err;
+});
+
+
 // Read File and prepare DataFrame
 var df = pl.readJSON('node.json', {format: "lines"});
 const createdAtColumnName = "_created_at";
