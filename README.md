@@ -17,7 +17,9 @@ sh process_gharchive.sh
 ## nodejs-polars
 
 ```shell
+cd node-metrics
+
 npm install
 
-node node_metrics.js
+node node src/index.js
 ```
