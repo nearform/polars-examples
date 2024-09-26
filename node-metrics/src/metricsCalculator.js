@@ -27,8 +27,7 @@ export const calculateRollingMeanPR = (df, createdAtColumnName, rollingMeanDays)
 // Calculate the number of open issues over time
 export const calculateOpenIssuesOverTime = (df, createdAtColumnName) => {
     let issuesDf = df.filter(pl.col('type').eq(pl.lit('IssuesEvent')))
-        .unnest('payload')
-        .rename({ "number": "payload_number" });
+        .unnest('payload');
 
     // Create a new column 'issue_change' to represent +1 for "opened" and -1 for "closed"
     issuesDf = issuesDf.withColumn(
