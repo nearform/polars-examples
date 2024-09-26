@@ -1,13 +1,10 @@
 import json
 import glob
 from pathlib import Path
+import os
 
 
 def clean_ndjson_file(input_file, output_file):
-    if Path(output_file).exists():
-        print("... skipping!!!")
-        return
-
     with open(input_file, "r") as infile, open(output_file, "w") as outfile:
         for line in infile:
             try:
@@ -26,9 +23,18 @@ files = glob.glob("raw_input/*.json")
 
 if __name__ == "__main__":
     for i, input_file in enumerate(files, 1):
+        if not Path(input_file).exists():
+            continue
 
         filename = input_file.split("/")[-1]
         output_file = f"clean_input/{filename}"
-        print(f"processing file {i}: {input_file} -> {output_file}", end="")
+
+        if Path(output_file).exists():
+            print("... skipping!!!")
+            os.remove(input_file)
+            continue
+
+        print(f"processing file {i}: {input_file} -> {output_file}", end="", flush=True)
         clean_ndjson_file(input_file, output_file)
+        os.remove(input_file)
     print("Done!!!")

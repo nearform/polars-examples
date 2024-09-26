@@ -1,5 +1,7 @@
 import glob
 import json
+import os
+import os
 from datetime import datetime
 import polars as pl
 from polars.datatypes import (
@@ -116,19 +118,17 @@ schema = Schema(
 )
 
 
-def filter_node(input_folder, scan=False, streaming=False):
+def filter_node(batch, scan=False, streaming=False):
+    print(f"processing clean_input batch: {batch}")
     start = datetime.now()
     inital = start
-    with open("node_input/node.json", "w") as outfile:
+    with open(f"node_input/node.json", "a") as outfile:
         last = datetime.now()
         print(f"{last-start} - Opened output file")
         start = last
 
         if scan:
-            df = pl.scan_ndjson(
-                f"{input_folder}/*.json",
-                schema=schema,
-            )
+            df = pl.scan_ndjson(batch, schema=schema)
             last = datetime.now()
             print(f"{last-start} - Scan Completed")
             start = last
@@ -156,10 +156,7 @@ def filter_node(input_folder, scan=False, streaming=False):
             start = last
 
         else:
-            df = pl.read_ndjson(
-                f"{input_folder}/*.json",
-                schema=schema,
-            )
+            df = pl.read_ndjson(batch, schema=schema)
             last = datetime.now()
             print(f"{last-start} - Read Completed")
             start = last
@@ -185,8 +182,11 @@ def filter_node(input_folder, scan=False, streaming=False):
 
 
 if __name__ == "__main__":
-    print(f"processing clean_input folder\n\n")
-    filter_node("clean_input", scan=False)
-    filter_node("clean_input", scan=True, streaming=False)
-    filter_node("clean_input", scan=True, streaming=True)
+    filter_node(f"clean_input/*.json", scan=True, streaming=False)
+    # Use glob to find all files matching the pattern
+    files = glob.glob(f"clean_input/*.json")
+
+    # Iterate and remove each file
+    for file in files:
+        os.remove(file)
     print("Done!!!")
