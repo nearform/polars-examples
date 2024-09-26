@@ -16,6 +16,8 @@ sh process_gharchive.sh
 
 ## nodejs-polars
 
-npm install chart.js canvas
+```shell
+npm install
 
 node node_metrics.js
+```
