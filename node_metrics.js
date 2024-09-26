@@ -16,7 +16,7 @@ fs.close(fd, (err) => {
 
 
 // Read File and prepare DataFrame
-var df = pl.readJSON('node.json', {format: "lines"});
+var df = pl.readJSON('node_input/node.json', {format: "lines", inferSchemaLength: null});
 const createdAtColumnName = "_created_at";
 df = df.rename({"id": "_id", "created_at": createdAtColumnName});
 df = df.unnest('actor');
