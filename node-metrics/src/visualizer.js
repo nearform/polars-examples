@@ -40,13 +40,13 @@ export const createRollingMeanPRsChart = async (labels, data, filePath) => {
         },
         options: {
             scales: {
-            y: {
-                beginAtZero: true,
-                title: { display: true, text: 'Rolling Mean of Pull Requests' }
-            },
-            x: {
-                title: { display: true, text: 'Day' }
-            }
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Rolling Mean of Pull Requests' }
+                },
+                x: {
+                    title: { display: true, text: 'Day' }
+                }
             }
         }
     };
