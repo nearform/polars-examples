@@ -313,9 +313,4 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python,node
 .DS_Store
 
-input
-raw_input
-compressed_raw_input
-clean_input
-coerce_input
-node_input
+data

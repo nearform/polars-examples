@@ -1,3 +1,26 @@
+import json
+import glob
+from pathlib import Path
+import os
+
+BASEDIR = Path(__file__).resolve().parent.parent
+
+
+def clean_ndjson_file(input_file, output_file):
+    with open(input_file, "r") as infile, open(output_file, "w") as outfile:
+        for line in infile:
+            try:
+                # Attempt to parse each line as a JSON object
+                data = json.loads(line)
+
+                # Write the cleaned line back to the output file
+                outfile.write(json.dumps(data) + "\n")
+            except json.JSONDecodeError as e:
+                print(f"Invalid JSON in line: {e}")
+                # Optionally, you can skip the invalid lines or log them
+        print("... done!!!")
+
+
 import glob
 import json
 import os
@@ -119,10 +142,10 @@ schema = Schema(
 
 
 def filter_node(batch, scan=False, streaming=False):
-    print(f"processing clean_input batch: {batch}")
+    print(f"processing {BASEDIR}/data/clean batch: {batch}")
     start = datetime.now()
     inital = start
-    with open(f"node_input/node.json", "a") as outfile:
+    with open(f"{BASEDIR}/data/final/node.json", "a") as outfile:
         last = datetime.now()
         print(f"{last-start} - Opened output file")
         start = last
@@ -182,11 +205,28 @@ def filter_node(batch, scan=False, streaming=False):
 
 
 if __name__ == "__main__":
-    filter_node(f"clean_input/*.json", scan=True, streaming=False)
+    raw_files = glob.glob(f"{BASEDIR}/data/raw/*.json")
+    for i, input_file in enumerate(raw_files, 1):
+        if not Path(input_file).exists():
+            continue
+
+        filename = input_file.split("/")[-1]
+        output_file = f"{BASEDIR}/data/clean/{filename}"
+
+        if Path(output_file).exists():
+            print("... skipping!!!")
+            os.remove(input_file)
+            continue
+
+        print(f"processing file {i}: {input_file}", end="", flush=True)
+        clean_ndjson_file(input_file, output_file)
+        os.remove(input_file)
+
+    filter_node(f"{BASEDIR}/data/clean/*.json", scan=True, streaming=True)
     # Use glob to find all files matching the pattern
-    files = glob.glob(f"clean_input/*.json")
+    clean_files = glob.glob(f"{BASEDIR}/data/clean/*.json")
 
     # Iterate and remove each file
-    for file in files:
+    for file in clean_files:
         os.remove(file)
     print("Done!!!")
