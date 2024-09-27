@@ -2,7 +2,11 @@ import pl from 'nodejs-polars';
 
 // Calculate most active contributors
 export const calculateActiveContributors = (df) => {
-    return df.groupBy(['login'])
+    return df
+    // Rename columns to avoid column name duplication during unnesting 'actor' field
+    .rename({ "id": "_id", "created_at": "_created_at"})
+    .unnest('actor')
+    .groupBy(['login'])
         .len()
         .sort('login_count', true)
         .dropNulls()
@@ -10,12 +14,12 @@ export const calculateActiveContributors = (df) => {
 };
 
 // Calculate rolling mean of pull requests over time
-export const calculateRollingMeanPR = (df, createdAtColumnName, rollingMeanDays) => {
+export const calculateRollingMeanPR = (df, rollingMeanDays) => {
     const prDf = df.filter(pl.col('type').eq(pl.lit('PullRequestEvent')))
-        .withColumn(pl.col(createdAtColumnName).str.strptime(pl.Date, '%Y-%m-%dT%H:%M:%S').alias('day'));
+        .withColumn(pl.col("created_at").str.strptime(pl.Date, '%Y-%m-%dT%H:%M:%S').alias('day'));
 
     // Group by day and count pull requests per day
-    let groupedDf = prDf.groupBy('day').agg(pl.count('_id').alias('pr_count'));
+    let groupedDf = prDf.groupBy('day').agg(pl.count('id').alias('pr_count'));
 
     groupedDf = groupedDf.sort('day');
     
@@ -25,7 +29,7 @@ export const calculateRollingMeanPR = (df, createdAtColumnName, rollingMeanDays)
 };
 
 // Calculate the number of open issues over time
-export const calculateOpenIssuesOverTime = (df, createdAtColumnName) => {
+export const calculateOpenIssuesOverTime = (df) => {
     let issuesDf = df.filter(pl.col('type').eq(pl.lit('IssuesEvent')))
         .unnest('payload');
 
@@ -39,11 +43,11 @@ export const calculateOpenIssuesOverTime = (df, createdAtColumnName) => {
             .alias('issue_change')
     );
 
-    issuesDf = issuesDf.sort(createdAtColumnName);
+    issuesDf = issuesDf.sort("created_at");
 
     // Cumulative sum to track the number of open issues over time
     return issuesDf.select([
-        pl.col(createdAtColumnName),
+        pl.col("created_at"),
         pl.col('issue_change').cumSum().alias('open_issues_count')
     ]);
 };

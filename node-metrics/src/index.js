@@ -10,8 +10,8 @@ import open from 'open';
 
     // Metrics calculation
     const activeContributors = calculateActiveContributors(df);
-    const rollingMeanPRs = calculateRollingMeanPR(df, '_created_at', 3);
-    const openIssuesOverTime = calculateOpenIssuesOverTime(df, '_created_at');
+    const rollingMeanPRs = calculateRollingMeanPR(df, 3);
+    const openIssuesOverTime = calculateOpenIssuesOverTime(df);
 
     // Visualization
 
@@ -30,7 +30,7 @@ import open from 'open';
     );
 
     await createOpenIssuesOverTimeChart(
-        openIssuesOverTime.getColumn('_created_at').toArray(),
+        openIssuesOverTime.getColumn('created_at').toArray(),
         openIssuesOverTime.getColumn('open_issues_count').toArray(),
         './charts/open_issues_over_time.png'
     );
