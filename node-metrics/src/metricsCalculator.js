@@ -3,10 +3,10 @@ import pl from 'nodejs-polars';
 // Calculate most active contributors
 export const calculateActiveContributors = (df) => {
     return df
-    // Rename columns to avoid column name duplication during unnesting 'actor' field
-    .rename({ "id": "_id", "created_at": "_created_at"})
-    .unnest('actor')
-    .groupBy(['login'])
+        // Rename columns to avoid column name duplication during unnesting 'actor' field
+        .rename({ "id": "_id", "created_at": "_created_at"})
+        .unnest('actor')
+        .groupBy(['login'])
         .len()
         .sort('login_count', true)
         .dropNulls()
