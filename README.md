@@ -21,5 +21,5 @@ cd node-metrics
 
 npm install
 
-node node src/index.js
+node src/index.js
 ```
