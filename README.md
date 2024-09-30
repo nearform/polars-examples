@@ -1,31 +1,57 @@
 # polars-examples
 
-## polars (Python)
+## Overview
+
+This repository contains a set of Shell and Python scripts for downloading, unzipping, cleaning, and filtering GitHub event data specifically for the nodejs/node repository. The data is then processed and analyzed using Polars in Node.js to generate key metrics and visualizations.
 
 ### Dependencies
 
-- poetry
+Poetry for managing Python dependencies.
 
-### Usage
+#### Setup and Usage
+
+##### 1. Download, Clean, and Filter Data
+
+First, install the required dependencies and execute the script to download and preprocess the data:
 
 ```shell
 poetry install
-
 sh process_gharchive.sh
 ```
 
-## nodejs-polars
+This will generate a cleaned JSON file at `data/final/node.json`. This file should then be copied to the `node-metrics` directory to be used for further analysis.
 
-The Node.js part of the project analyzes GitHub activity data using the Polars library in Node.js and visualizes the results using Chart.js. 
-The application processes a pre-built JSON file from GitHub Archive, filters relevant events (such as pull requests and issues), and calculates key metrics like the most active contributors, rolling mean of pull requests over time, and the number of open issues over time. 
-The data is grouped, aggregated, and then visualized using server-side chart generation with Chart.js. 
-The project is modularized into separate components for data loading, metric calculation, and chart rendering.
+```shell
+cp data/final/node.json node-metrics/data/node.json
+```
 
-### Usage
+##### 2. Analyze Data with Node.js
+
+The Node.js part of the project processes and visualizes the pre-built JSON data using the Polars library and Chart.js. It calculates key metrics such as the most active contributors, the rolling mean of pull requests over time, and the number of open issues.
+
+To set up and run the analysis:
+
 ```shell
 cd node-metrics
-
 npm install
-
 node src/index.js
 ```
+
+This will generate server-side charts to visualize the metrics.
+
+### Project Structure
+
+#### Shell/Python Scripts
+
+Scripts for data download, extraction, cleaning, and filtering.
+Outputs a final JSON file with the processed nodejs/node events.
+
+#### Node.js Scripts
+
+Analyzes the pre-processed JSON data.
+Uses Polars for data manipulation and Chart.js for visualization.
+Includes modular components for data loading, metric calculation, and chart rendering.
+
+#### Notes
+
+Ensure you have all dependencies installed before running the scripts.
