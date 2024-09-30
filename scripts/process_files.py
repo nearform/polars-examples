@@ -1,12 +1,29 @@
-import json
 import glob
-from pathlib import Path
+import json
 import os
+from datetime import datetime
+from pathlib import Path
+
+import polars as pl
+from polars.datatypes import (
+    Boolean,
+    Int64,
+    List,
+    String,
+    Struct,
+)
+from polars.schema import Schema
 
 BASEDIR = Path(__file__).resolve().parent.parent
 
 
 def clean_ndjson_file(input_file, output_file):
+    """
+    Clean json lines
+
+    Some lines downloaded from hgarchive have some invalid or unescaped caracter which breaks when loading on Polars,
+    so this will just load as json and dump again to properly escape all caracters and be able to load on polars.
+    """
     with open(input_file, "r") as infile, open(output_file, "w") as outfile:
         for line in infile:
             try:
@@ -19,46 +36,6 @@ def clean_ndjson_file(input_file, output_file):
                 print(f"Invalid JSON in line: {e}")
                 # Optionally, you can skip the invalid lines or log them
         print("... done!!!")
-
-
-import glob
-import json
-import os
-import os
-from datetime import datetime
-import polars as pl
-from polars.datatypes import (
-    Array,
-    Binary,
-    Boolean,
-    Categorical,
-    DataType,
-    Date,
-    Datetime,
-    Decimal,
-    Duration,
-    Enum,
-    Field,
-    Float32,
-    Float64,
-    Int8,
-    Int16,
-    Int32,
-    Int64,
-    List,
-    Null,
-    Object,
-    String,
-    Struct,
-    Time,
-    UInt8,
-    UInt16,
-    UInt32,
-    UInt64,
-    Unknown,
-    Utf8,
-)
-from polars.schema import Schema
 
 
 # 0. Loading the data
@@ -214,7 +191,7 @@ if __name__ == "__main__":
         output_file = f"{BASEDIR}/data/clean/{filename}"
 
         if Path(output_file).exists():
-            print("... skipping!!!")
+            print("... file already clean!!!")
             os.remove(input_file)
             continue
 

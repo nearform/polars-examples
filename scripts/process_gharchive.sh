@@ -17,7 +17,6 @@ for month in {1..12}; do   # Set the month range
       gz_file_path="${BASE_DIR}/data/compressed/${year}-${formatted_month}-${formatted_day}-${hour}.json.gz"
       extracted_file_path="${BASE_DIR}/data/raw/${year}-${formatted_month}-${formatted_day}-${hour}.json"
       clean_file_path="${BASE_DIR}/data/clean/${year}-${formatted_month}-${formatted_day}-${hour}.json"
-      node_file_path="${BASE_DIR}/data/final/${year}-${formatted_month}-${formatted_day}-${hour}.json"
 
       if [ ! -e "$clean_file_path" ]; then
         if [ ! -e "$gz_file_path" ]; then

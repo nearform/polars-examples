@@ -12,6 +12,11 @@ polars = "^1.7.1"
 pandas = "^2.2.3"
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+isort = "^5.13.2"
+autoflake = "^2.3.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
