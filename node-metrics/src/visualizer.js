@@ -22,14 +22,14 @@ export const createActiveContributorsChart = async (labels, data, filePath) => {
                     maxRotation: 45,
                     minRotation: 0,
                     font: {
-                        size: 14  // Increase font size
+                        size: 18  // Increase font size
                     }
                 },
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Contributors',
                     font: {
-                        size: 14  // Increase font size for x-axis title
+                        size: 18  // Increase font size for x-axis title
                     }
                 }
             },
@@ -37,7 +37,7 @@ export const createActiveContributorsChart = async (labels, data, filePath) => {
                 beginAtZero: true,
                 ticks: {
                     font: {
-                        size: 14  // Increase font size for Y-axis
+                        size: 18  // Increase font size for Y-axis
                     }
                 }
             }
@@ -46,7 +46,7 @@ export const createActiveContributorsChart = async (labels, data, filePath) => {
             legend: {
                 labels: {
                     font: {
-                        size: 16  // Increase font size for legend
+                        size: 18  // Increase font size for legend
                     }
                 }
             },
@@ -54,7 +54,7 @@ export const createActiveContributorsChart = async (labels, data, filePath) => {
                 display: true,
                 text: 'Most Active Contributors',
                 font: {
-                    size: 18  // Increase title font size
+                    size: 24  // Increase title font size
                 }
             }
         }
@@ -83,7 +83,12 @@ export const createRollingMeanPRsChart = async (labels, data, filePath) => {
             scales: {
                 y: {
                     beginAtZero: true,
-                    title: { display: false, text: 'Rolling Mean of Pull Requests' }
+                    title: { display: false, text: 'Rolling Mean of Pull Requests' },
+                    ticks: {
+                        font: {
+                            size: 18
+                        }
+                    },
                 },
                 x: {
                     title: { display: false, text: 'Date' },
@@ -93,14 +98,19 @@ export const createRollingMeanPRsChart = async (labels, data, filePath) => {
                         displayFormats: {
                           day: 'yyyy-MM-dd'  // Display format for x-axis
                       }
-                    }
+                    },
+                    ticks: {
+                        font: {
+                            size: 18
+                        }
+                    },
                 }
             },
             plugins: {
               legend: {
                   labels: {
                       font: {
-                          size: 16  // Increase font size for legend
+                          size: 18  // Increase font size for legend
                       }
                   }
               },
@@ -108,7 +118,7 @@ export const createRollingMeanPRsChart = async (labels, data, filePath) => {
                   display: true,
                   text: 'Rolling Mean of Pull Requests',
                   font: {
-                      size: 18  // Increase title font size
+                      size: 24  // Increase title font size
                   }
               }
             }
@@ -144,14 +154,14 @@ export const createOpenIssuesOverTimeChart = async (labels, data, filePath) => {
                   },
                   ticks: {
                       font: {
-                          size: 12  // Increase font size for x-axis labels
+                          size: 18  // Increase font size for x-axis labels
                       }
                   },
                   title: {
                       display: false,
                       text: 'Date',
                       font: {
-                          size: 14  // Increase font size for x-axis title
+                          size: 18  // Increase font size for x-axis title
                       }
                   }
               },
@@ -159,7 +169,7 @@ export const createOpenIssuesOverTimeChart = async (labels, data, filePath) => {
                   beginAtZero: true,
                   ticks: {
                       font: {
-                          size: 14  // Increase font size for y-axis labels
+                          size: 18  // Increase font size for y-axis labels
                       }
                   },
               }
@@ -168,7 +178,7 @@ export const createOpenIssuesOverTimeChart = async (labels, data, filePath) => {
               legend: {
                   labels: {
                       font: {
-                          size: 16  // Increase font size for legend
+                          size: 18  // Increase font size for legend
                       }
                   }
               },
@@ -176,7 +186,7 @@ export const createOpenIssuesOverTimeChart = async (labels, data, filePath) => {
                   display: true,
                   text: 'Open Issues Over Time',
                   font: {
-                      size: 18  // Increase title font size
+                      size: 24  // Increase title font size
                   }
               },
               tooltip: {
