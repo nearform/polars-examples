@@ -6,12 +6,12 @@ import open from 'open';
 // Main function to run the analysis and visualization
 (async () => {
     const filePath = './data/node.json';
-    const df = loadData(filePath);
+    const eventsDataFrame = loadData(filePath);
 
     // Metrics calculation
-    const activeContributors = calculateActiveContributors(df);
-    const rollingMeanPRs = calculateRollingMeanPR(df, 3);
-    const openIssuesOverTime = calculateOpenIssuesOverTime(df);
+    const activeContributors = calculateActiveContributors(eventsDataFrame);
+    const rollingMeanPRs = calculateRollingMeanPR(eventsDataFrame, 3);
+    const openIssuesOverTime = calculateOpenIssuesOverTime(eventsDataFrame);
 
     // Visualization
 

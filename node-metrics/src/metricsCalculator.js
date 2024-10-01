@@ -1,8 +1,8 @@
 import pl from 'nodejs-polars';
 
 // Calculate most active contributors
-export const calculateActiveContributors = (df) => {
-    return df
+export const calculateActiveContributors = (eventsDataFrame) => {
+    return eventsDataFrame
         // Rename columns to avoid column name duplication during unnesting 'actor' field
         .rename({ "id": "_id", "created_at": "_created_at"})
         .unnest('actor')
@@ -14,8 +14,8 @@ export const calculateActiveContributors = (df) => {
 };
 
 // Calculate rolling mean of pull requests over time
-export const calculateRollingMeanPR = (df, rollingMeanDays) => {
-    const prDf = df.filter(pl.col('type').eq(pl.lit('PullRequestEvent')))
+export const calculateRollingMeanPR = (eventsDataFrame, rollingMeanDays) => {
+    const prDf = eventsDataFrame.filter(pl.col('type').eq(pl.lit('PullRequestEvent')))
         .withColumn(pl.col("created_at").str.strptime(pl.Date, '%Y-%m-%dT%H:%M:%S').alias('day'));
 
     // Group by day and count pull requests per day
@@ -29,8 +29,8 @@ export const calculateRollingMeanPR = (df, rollingMeanDays) => {
 };
 
 // Calculate the number of open issues over time
-export const calculateOpenIssuesOverTime = (df) => {
-    let issuesDf = df.filter(pl.col('type').eq(pl.lit('IssuesEvent')))
+export const calculateOpenIssuesOverTime = (eventsDataFrame) => {
+    let issuesDf = eventsDataFrame.filter(pl.col('type').eq(pl.lit('IssuesEvent')))
         .unnest('payload');
 
     // Create a new column 'issue_change' to represent +1 for "opened" and -1 for "closed"
