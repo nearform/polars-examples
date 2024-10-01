@@ -314,3 +314,9 @@ pyrightconfig.json
 .DS_Store
 
 data
+clean_input/
+coerce_input/
+compressed_raw_input/
+node_input/
+raw_input/
+node-metrics/charts/
