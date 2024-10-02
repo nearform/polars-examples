@@ -15,5 +15,6 @@ export const createChart = async (config, filePath) => {
 
     // Generate the chart as an image and save it
     const buffer = canvas.toBuffer('image/png');
+    fs.mkdirSync('./charts', { recursive: true });
     fs.writeFileSync(filePath, buffer);
 };
