@@ -3,7 +3,6 @@
     "canvas": "^2.11.2",
     "chart.js": "^4.4.4",
     "chartjs-adapter-date-fns": "^3.0.0",
-    "fs": "^0.0.1-security",
     "nodejs-polars": "^0.15.0",
     "open": "^10.1.0"
   },
