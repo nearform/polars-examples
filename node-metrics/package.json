@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "canvas": "^2.11.2",
+    "canvas": "^3.2.1",
     "chart.js": "^4.4.4",
     "chartjs-adapter-date-fns": "^3.0.0",
     "nodejs-polars": "^0.15.0",
