@@ -6,7 +6,12 @@ This repository contains a set of Shell and Python scripts for downloading, unzi
 
 ### Dependencies
 
-Poetry for managing Python dependencies.
+**Poetry >= 2.0** for managing Python dependencies. `poetry.lock` is `lock-version = "2.1"`,
+which Poetry 1.x cannot read — on Poetry 1.x, `poetry install` fails with "The lock file is not
+compatible with the current version of Poetry". This floor is enforced by
+`requires-poetry = ">=2.0"` in `pyproject.toml`.
+
+Node.js is required for the `node-metrics` analysis step.
 
 #### Setup and Usage
 

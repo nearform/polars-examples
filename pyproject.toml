@@ -5,6 +5,8 @@ description = ""
 authors = ["Denis Germano <denis.germano@nearform.com>"]
 readme = "README.md"
 package-mode = false
+# poetry.lock is lock-version 2.1, which Poetry 1.x cannot read.
+requires-poetry = ">=2.0"
 
 [tool.poetry.dependencies]
 python = "^3.12"
