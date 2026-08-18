@@ -7,11 +7,17 @@ This repository contains a set of Shell and Python scripts for downloading, unzi
 ### Dependencies
 
 **Poetry >= 2.0** for managing Python dependencies. `poetry.lock` is `lock-version = "2.1"`,
-which Poetry 1.x cannot read — on Poetry 1.x, `poetry install` fails with "The lock file is not
-compatible with the current version of Poetry". This floor is enforced by
-`requires-poetry = ">=2.0"` in `pyproject.toml`.
+written by Poetry 2.1. Poetry 1.x still reads that lockfile, but only with a compatibility
+warning ("The lock file might not be compatible with the current version of Poetry"), and it
+may not interpret it correctly, so Poetry >= 2.0 is the supported floor.
+`requires-poetry = ">=2.0"` in `pyproject.toml` makes that explicit for anyone on 2.x, which
+reports "This project requires Poetry >=2.0". Poetry 1.8.3 does not recognise the key and
+stops with a less helpful message: "Additional properties are not allowed
+('requires-poetry' was unexpected)".
 
-Node.js is required for the `node-metrics` analysis step.
+**Node.js `^18.12.0 || >= 20.9.0`** for the `node-metrics` analysis step. That is the range
+`canvas@3` requires and the narrowest floor in `node-metrics`; it is declared in
+`node-metrics/package.json`.
 
 #### Setup and Usage
 

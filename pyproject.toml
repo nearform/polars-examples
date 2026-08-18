@@ -5,7 +5,8 @@ description = ""
 authors = ["Denis Germano <denis.germano@nearform.com>"]
 readme = "README.md"
 package-mode = false
-# poetry.lock is lock-version 2.1, which Poetry 1.x cannot read.
+# poetry.lock is lock-version 2.1; Poetry 1.x reads it only with a
+# compatibility warning. Poetry 2.x is the supported floor.
 requires-poetry = ">=2.0"
 
 [tool.poetry.dependencies]
