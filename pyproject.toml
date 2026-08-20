@@ -5,6 +5,9 @@ description = ""
 authors = ["Denis Germano <denis.germano@nearform.com>"]
 readme = "README.md"
 package-mode = false
+# poetry.lock is lock-version 2.1; Poetry 1.x reads it only with a
+# compatibility warning. Poetry 2.x is the supported floor.
+requires-poetry = ">=2.0"
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -13,7 +16,7 @@ pandas = "^2.2.3"
 
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.8.0"
+black = "^26.3.1"
 isort = "^5.13.2"
 autoflake = "^2.3.1"
 
